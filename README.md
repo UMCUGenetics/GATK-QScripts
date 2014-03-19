@@ -15,6 +15,7 @@ HaplotypeCaller example (per sample):
     java -Xmx16G -Xms4G -jar Queue.jar -jobQueue veryshort -jobEnv "threaded 4" -jobRunner GridEngine -jobReport logs/variantCaller.jobReport.txt -S HaplotypeCaller.scala -R Homo_sapiens.GRCh37.GATK.illumina.fasta -mem 4 -nct 4 -nsc 1000 -stand_call_conf 30 -stand_emit_conf 15 -I SAMPLE_1_dedup_realigned_recalibrated.bam -D dbsnp_137.b37.vcf -L exome.interval_list -run
     
 GenotypeGVCFs example:
+    
     java -Xmx16G -Xms4G -jar Queue.jar -jobQueue veryshort -jobEnv "threaded 4" -jobRunner GridEngine -jobReport logs/genotyper.jobReport.txt -S GenotypeGVCFs.scala -R Homo_sapiens.GRCh37.GATK.illumina.fasta -mem 4 -nt 4 -nsc 1000 -I SAMPLE_1_dedup_realigned_recalibrated.genome.vcf -I SAMPLE_2_dedup_realigned_recalibrated.genome.vcf -D dbsnp_137.b37.vcf -O test_gatk3.0 -run
 
 
