@@ -12,11 +12,8 @@ class VariantCaller extends QScript {
     @Input(doc="The reference file for the bam files.", shortName="R", required=true)
     var referenceFile: File = _
 
-    @Input(doc="One or more bam files.", shortName="I")
-    var bamFiles: List[File] = Nil
-
-    @Input(doc="Output core filename.", shortName="O", required=true)
-    var out: File = _
+    @Input(doc="One bam files.", shortName="I")
+    var bamFile: File = _
 
     @Argument(doc="Maxmem.", shortName="mem", required=true)
     var maxMem: Int = _
@@ -47,9 +44,9 @@ class VariantCaller extends QScript {
 	val haplotypeCaller = new HaplotypeCaller
 
 	// All required input
-	haplotypeCaller.input_file = bamFiles
+	haplotypeCaller.input_file :+= bamFile
 	haplotypeCaller.reference_sequence = referenceFile
-	haplotypeCaller.out = qscript.out + ".raw_variants.vcf"
+	haplotypeCaller.out = swapExt(bamFile, "bam", "genome.vcf")
 
 	haplotypeCaller.scatterCount = numScatters
 	haplotypeCaller.memoryLimit = maxMem
@@ -57,6 +54,11 @@ class VariantCaller extends QScript {
 
 	haplotypeCaller.stand_emit_conf = standEmitConf
 	haplotypeCaller.stand_call_conf = standCallConf
+
+	// GATK 3.0 pipeline
+	haplotypeCaller.emitRefConfidence = org.broadinstitute.sting.gatk.walkers.haplotypecaller.HaplotypeCaller.ReferenceConfidenceMode.GVCF
+	haplotypeCaller.variant_index_type = org.broadinstitute.sting.utils.variant.GATKVCFIndexType.LINEAR
+	haplotypeCaller.variant_index_parameter = 128000
 
 	// Optional input
 	if (dbsnpFile != null) {
